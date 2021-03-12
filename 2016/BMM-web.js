@@ -9,7 +9,7 @@ jQuery(document).ready(function() {
 	if( !(isChrome || isFirefox) ) {
 		jQuery('body').append(`<div class="alert alert-warning" id="alert-bar">
 			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-			<strong>Warning!</strong> Your browser might not be compatible. We recommend using <a href="https://www.google.com/chrome/">Chrome</a>.
+			<strong>Warning!</strong> Your browser might not be compatible. We recommend using <a target="_blank" href="https://www.google.com/chrome/">Chrome</a>.
 			</div>`);
 	}
 
@@ -133,7 +133,7 @@ jQuery(document).ready(function() {
 		div.innerHTML = '<div id="intro-div" class="form-control">'+
 		'<h5>Welcome!</h5>'+
 		'<p>This interactive map displays the nocturnal bird migration of Autumn 2016 based on data from the European network of weather radars.</p>'+
-		'<p>This map was generated using a novel geostatistical model presented in a scientific paper (<a href="https://doi.org/10.3390/rs11192233"><i class="ai ai-doi"></i>/10.3390/rs11192233</a>).</p>'+
+		'<p>This map was generated using a novel geostatistical model presented in a scientific paper (<a target="_blank" href="https://doi.org/10.3390/rs11192233"><i class="ai ai-doi"></i>/10.3390/rs11192233</a>).</p>'+
 		'<p>Explore time series of bird densities for specific locations using the tabs below, or check <a id="modal" href="#" onclick="return false;">the more detailed instructions <i class="fas fa-info-circle"></i></a>\.</p>';
 		div.firstChild.onmousedown = div.firstChild.ondblclick = L.DomEvent.stopPropagation;
 		return div
@@ -165,10 +165,10 @@ jQuery(document).ready(function() {
 
 		div.innerHTML += '<div id="learnmore-div" class="form-control">\
 		<a role="button" data-toggle="tooltip" class="btn btn-default" title="Introduction to the interpolation model" href="https://Rafnuss-PostDoc.github.io/BMM/2016" target="_blank"><i class="fas fa-atom"></i></a>\
-		<a role="button" data-toggle="tooltip" class="btn btn-default" title="Paper" href="https://www.biorxiv.org/content/10.1101/690065v1" target="_blank"><i class="ai ai-biorxiv"></i></a>\
-		<a role="button" data-toggle="tooltip" class="btn btn-default" title="Matlab Livescript" href="https://rafnuss-postdoc.github.io/BMM/MatlabLiveScript/Inference.html" target="_blank"><img width="20" src="https://camo.githubusercontent.com/0f25b3f52ab9619f688204528a7e22e84aeac07d/68747470733a2f2f63646e2e6f6e6c696e65776562666f6e74732e636f6d2f7376672f696d675f3433373034312e706e67"></a>\
+		<a role="button" data-toggle="tooltip" class="btn btn-default" title="Paper" href="https://doi.org/10.3390/rs11192233" target="_blank"><i class="ai ai-doi"></i></a>\
+		<a role="button" data-toggle="tooltip" class="btn btn-default" title="Matlab Livescript" href="https://rafnuss-postdoc.github.io/BMM/2016/LiveScript/Inference.html" target="_blank"><img width="20" src="https://camo.githubusercontent.com/0f25b3f52ab9619f688204528a7e22e84aeac07d/68747470733a2f2f63646e2e6f6e6c696e65776562666f6e74732e636f6d2f7376672f696d675f3433373034312e706e67"></a>\
 		<a role="button" data-toggle="tooltip" class="btn btn-default" title="Researchgate project webpage" href="https://www.researchgate.net/project/Bird-Migration-Modelling-BMM" target="_blank"><i class="fab fa-researchgate"></i></a>\
-		<a role="button" data-toggle="tooltip" class="btn btn-default" title="Code of the website" href="https://github.com/Rafnuss-PostDoc/BMM-web" target="_blank"><i class="fab fa-github"></i></a>\
+		<a role="button" data-toggle="tooltip" class="btn btn-default" title="Code of the website" href="https://github.com/Rafnuss-PostDoc/BMM-website" target="_blank"><i class="fab fa-github"></i></a>\
 		</div>';
 
 		div.firstChild.onmousedown = div.firstChild.ondblclick = L.DomEvent.stopPropagation;
@@ -338,13 +338,13 @@ jQuery(document).ready(function() {
 			<pre><code>https://bmm.raphaelnussbaumer.com/api/polyline_mtr/48.980216985374994,1.1425781250000002/45.89000815866184,8.525390625000002</code></pre>
 			
 			<h2>Packaged used</h2>
-			[leaflet](https://leafletjs.com/) is used manage the map and various layer, <a href="https://github.com/socib/Leaflet.TimeDimension">Leaflet.TimeDimension</a> controls the time and interaction with the layer. The data query on the time series are served by <a href="https://nodejs.org/">Nodejs</a> and stoed by <a href="https://www.mongodb.com/">Mongodb</a>. 
+			[leaflet](https://leafletjs.com/) is used manage the map and various layer, <a target="_blank" href="https://github.com/socib/Leaflet.TimeDimension">Leaflet.TimeDimension</a> controls the time and interaction with the layer. The data query on the time series are served by <a target="_blank" href="https://nodejs.org/">Nodejs</a> and stoed by <a target="_blank" href="https://www.mongodb.com/">Mongodb</a>. 
 			
 			<h2>Download data</h2>
 			<ul>
-				<li>The raw data used in this study are found on the repository of [European Network for the Radar surveillance of Animal Movement (ENRAM)](http://enram.github.io/data-repository/) and were generated with [vol2bird](https://github.com/adokter/vol2bird).</li>
-				<li>These data were cleaned manually into vertical profile of reflectivity. These data are available on zenodo [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3243397.svg)](https://doi.org/10.5281/zenodo.3243397)</li>
-				<li>The final interpolated spatio-temporal map can also be downloaded from zenodo [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3243397.svg)](https://doi.org/10.5281/zenodo.3243397).</li>
+				<li>The raw data used in this study are found on the repository of <a target="_blank" href="http://enram.github.io/data-repository/">European Network for the Radar surveillance of Animal Movement (ENRAM)</a> and were generated with <a target="_blank" href="https://github.com/adokter/vol2bird">vol2bird</a>.</li>
+				<li>These data were cleaned manually into vertical profile of reflectivity. These data are available on zenodo <a target="_blank" href="https://doi.org/10.5281/zenodo.3243396"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3243396.svg" alt="DOI"></a></li>
+				<li>The final interpolated spatio-temporal map can also be downloaded from zenodo <a target="_blank" href="https://doi.org/10.5281/zenodo.3243465"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3243465.svg" alt="DOI"></a>.</li>
 			</ul>
 			`
 		});

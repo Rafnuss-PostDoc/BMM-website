@@ -578,9 +578,9 @@ const sliderchange = function(){
 };
 
 const loaded = () => {
-	//jQuery('#btn-go').prop('disabled', false);
+	jQuery('#btn-go').prop('disabled', false);
 	jQuery('#progressbardiv').hide()
-	jQuery('#modal-title').html("Data loaded. Press 'Go' (bottom) when ready!")
+	jQuery('#modal-title').html("")//html("Data loaded. Press 'Go' (bottom) when ready!")
 	jQuery('#modal-close').show()
 	map.fitBounds([
 		[-2.406277,42.878452],

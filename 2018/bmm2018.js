@@ -75,10 +75,8 @@ oReq.onload = function (oEvent) {
 	if (oReq.response) {
 		var binData = new Uint8Array(oReq.response);
 		var byteArray = pako.inflate(binData);
-		console.log(byteArray)
 		byteArray=new Int16Array(byteArray.buffer, byteArray.byteOffset, byteArray.byteLength/2);
 		
-
 		for (var i = 1; i < byteArray.length; i++) {
 			byteArray[i] = byteArray[i-1] + byteArray[i];//+ ( ( byteArray[i] >> 1 ) ^ -( byteArray[i] & 0x1 ) );
 		}
@@ -580,7 +578,7 @@ const sliderchange = function(){
 };
 
 const loaded = () => {
-	jQuery('#btn-go').show()
+	//jQuery('#btn-go').prop('disabled', false);
 	jQuery('#progressbardiv').hide()
 	jQuery('#modal-title').html("Data loaded. Press 'Go' (bottom) when ready!")
 	jQuery('#modal-close').show()

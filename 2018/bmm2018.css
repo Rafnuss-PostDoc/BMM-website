@@ -164,7 +164,7 @@ input[name='radio-bar']:checked + div.bar{
   text-align: right;
 }
 .fa-stopwatch{
-  margin: 4px 0px 5px 0px;
+  margin: 3px 0px 3px 0px;
   padding-right: 6px;
 }
 #btn-go{
@@ -174,4 +174,11 @@ input[name='radio-bar']:checked + div.bar{
 
 .mapboxgl-popup-close-button{
   padding: 1px 6px;
+}
+.select--s {
+  padding: 1px 24px 3px 6px;
+}
+#speed-div{
+  padding-top:23px !important;
+  padding-bottom:23px !important;
 }

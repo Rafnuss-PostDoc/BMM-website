@@ -1,6 +1,6 @@
 
 let date, time=[];
-const d0 = new Date(2018,01,01);
+const d0 = new Date(2018,00,01);
 jQuery.getJSON('./assets/date.json', function(data){
 	date=data;
 	var d = new Date(d0);
@@ -204,7 +204,7 @@ map.on('load', function() {
 				"layout": {
 					"icon-image": "arrow",
 					"icon-rotate": ['get', 'angle'],
-					"icon-size": ['get', 'size'],
+					"icon-size": ['get', 'size'], //['*', 2, ['get', 'size']]
 				},
 				"filter":  ["all", ["!=", "angle", 0], ["!=", "size", 0]]
 			})
@@ -699,7 +699,30 @@ oReq_ll.onload = function (oEvent) {
 
 
 
+/*
+For gif
+jQuery('body > div.absolute.top-ml.left.z1.w240-ml.px12').hide()
+jQuery('body > div.fixed.top.right.w240.txt-s.mx12.my12').addClass('left').removeClass('right')
+jQuery('#date').remove()
+jQuery('.switch-container').remove()
+jQuery('body > div.fixed.top.w240.txt-s.mx12.my12.hidden.left > div.round.bg-white.shadow-darken10.px12.py12 > div.flex-parent.py6.flex-parent--center-cross').remove()
+jQuery('body').append('<div class="fixed bg-white mt12 round top" style="margin-left: 379px; padding: 12px 14px; "><span id="date">2018-03-17 00:00</span></div>')
 
+html2canvas($("html"), {
+	onrendered: function(canvas) {
+		theCanvas = canvas;
+		canvas.toBlob(function(blob) {
+			saveAs(blob, "Dashboard.png"); 
+		});
+	}
+});
+
+
+
+speed=0.5
+
+
+*/
 
 
 

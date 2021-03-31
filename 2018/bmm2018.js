@@ -202,6 +202,7 @@ map.on('load', function() {
 				type: 'symbol',
 				source: 'quiver_source',
 				"layout": {
+					"icon-allow-overlap": true,
 					"icon-image": "arrow",
 					"icon-rotate": ['get', 'angle'],
 					"icon-size": ['get', 'size'], //['*', 2, ['get', 'size']]
@@ -506,6 +507,7 @@ map.on('load', function() {
 
 
 const quiver_resize_factor = 20;
+let zoomMap = [4,2,2,3,4,5,6,7];
 
 const sliderchange = function(){
 	if (date[s.value]>0){
@@ -524,11 +526,21 @@ const sliderchange = function(){
 			var rt = new Array(grid_geojson.features.length).fill(0);
 		}
 
+		var zoom = map.getZoom();
+		console.log(zoom + zoomMap.map(x => x<zoom))
+		
+
 		for (var i = 0, len = grid_geojson.features.length; i < len; i++) {
 			const x = (ut[i]==0 | rt[i]) ? 0 : ut[i]/100-30;
 			const y = (vt[i]==0 | rt[i]) ? 0 : vt[i]/100-30;
-			quiver_geojson.features[i].properties.angle = Math.atan2(y,x) * (180/Math.PI) - 90;
-			quiver_geojson.features[i].properties.size =  Math.min(1, Math.sqrt(x*x + y*y)/quiver_resize_factor);
+			if ( zoomMap[quiver_geojson.features[i].properties.zoom] < zoom ){
+				quiver_geojson.features[i].properties.angle = Math.atan2(y,x) * (180/Math.PI) - 90;
+				quiver_geojson.features[i].properties.size =  Math.min(1, Math.sqrt(x*x + y*y)/quiver_resize_factor);
+			} else {
+				quiver_geojson.features[i].properties.angle = 0
+				quiver_geojson.features[i].properties.size = 0
+			}
+
 
 			grid_geojson.features[i].properties.value = rt[i] ? 0 : dt[i]/100;
 			grid_geojson.features[i].properties.angle = quiver_geojson.features[i].properties.angle;

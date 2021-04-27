@@ -136,14 +136,22 @@
 				</div>
 			</div>
 			<div class="round">
-				<label><input class="mt6" name='radio-bar' type='radio' value="YlOrBr" ></label>
+				<label><input class="mt6" name='radio-bar' type='radio' value="YlOrBr" checked></label>
 				<label><input class="mt6" name='radio-bar' type='radio' value="YlGn"></label>
 				<label><input class="mt6" name='radio-bar' type='radio' value="BrBG"></label>
-				<label><input class="mt6" name='radio-bar' type='radio' value="Spectral" checked></label>
+				<label><input class="mt6" name='radio-bar' type='radio' value="Spectral" ></label>
 			</div>
 			<div class='grid txt-xs'>
 				<div class='flex-child--grow'><input type="number" min="1" class='input textarea--s w60 caxis' id="caxismin" value='1' /></div>
 				<div class='flex-child--grow align-r'><input type="number" min="1" class='input textarea--s w60 caxis' id="caxismax" value='100' /></div>
+			</div>
+			<div class='flex-parent pb6 flex-parent--center-cross'>
+				<div class='flex-child flex-child--no-shrink pr6 '>Opacity</div>
+				<div class='flex-child flex-child--grow'>
+					<div class='range range--s'>
+						<input type='range' id="opacity" min='0' max='1' step='0.1' value='0.7'/>
+					</div>
+				</div>
 			</div>
 
 			<div class='mt-2'>
@@ -173,6 +181,14 @@
 				<div class="col"></div>
 				<div class="col m-auto align-center">15</div>
 			</div>
+			<div class='flex-parent pb6 flex-parent--center-cross'>
+				<div class='flex-child flex-child--no-shrink pr6 '>Zoom Level</div>
+				<div class='flex-child flex-child--grow'>
+					<div class='range range--s'>
+						<input type='range' id="zoom-level" min='-2' max='2' step='1' value='0'/>
+					</div>
+				</div>
+			</div>
 
 			<div class='flex-parent flex-parent--space-between-main mt-2'>
 				<div class="flex-child">
@@ -185,7 +201,7 @@
 			</div>
 			
 			<label class='switch-container'>
-				<input type='checkbox' id='radar' checked/>
+				<input type='checkbox' id='radar'/>
 				<div class='switch mr6 top '></div>
 				Hide/show radars
 			</label>
@@ -195,15 +211,6 @@
 				<div class='switch mr6 top '></div>
 				Hide/show rain
 			</label>
-
-			<div class='flex-parent py6 flex-parent--center-cross'>
-				<div class='flex-child flex-child--no-shrink pr6 '>Opacity</div>
-				<div class='flex-child flex-child--grow'>
-					<div class='range range--s'>
-						<input type='range' id="opacity" min='0' max='1' step='0.1' value='0.7'/>
-					</div>
-				</div>
-			</div>
 		</div>
 		<div id="tt-nb-div" class="night mt12 round">
 			<div id="gauge"></div>
@@ -282,7 +289,7 @@
 							<span class="tooltiptext tooltiptext-interest">29/30-04: peak spring migration</span>
 						</div>
 					</div>
-					<input id='slider' class="slider w-full h12 bg-darken10 round-full" type='range' min='0' max='35071' step='1' value='4196' onchange="sliderchange(event);"/>
+					<input id='slider' class="slider w-full h12 bg-darken10 round-full" type='range' min='0' max='35071' step='1' value='8236' onchange="sliderchange(event);"/>
 					<div class="grid txt-xs mx-neg12 my-neg2 flex-parent--space-between-main">
 						<p><span class="ticks"></span>01-Jan</p>
 						<p><span class="ticks"></span>01-Feb</p>

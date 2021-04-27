@@ -207,7 +207,7 @@ map.on('load', function() {
 					"icon-rotate": ['get', 'angle'],
 					"icon-size": ['get', 'size'], //['*', 2, ['get', 'size']]
 				},
-				"filter":  ["all", ["!=", "angle", 0], ["!=", "size", 0]]
+				//"filter":  ["all", ["!=", "angle", 0], ["!=", "size", 0]]
 			})
 
 			loaded_count +=1;
@@ -246,6 +246,8 @@ map.on('load', function() {
 			},
 			"filter": ["!=", "value", 0]
 		})
+		
+		map.setLayoutProperty('radar_layer', 'visibility', 'none');
 
 		map.loadImage('./assets/right-arrow-black.png', function(error, image) {
 			map.addImage('arrow-radar', image);
@@ -258,9 +260,13 @@ map.on('load', function() {
 					"icon-rotate": ['get', 'angle'],
 					"icon-size": ['get', 'size'],
 				},
-				"filter":  ["all", ["!=", "angle", 0], ["!=", "size", 0]]
+				visibility: "none",
+				//"filter":  ["all", ["!=", "angle", 0], ["!=", "size", 0]]
 			})
+			
+			map.setLayoutProperty('radar_quiver_layer', 'visibility', 'none');
 		})
+
 
 		loaded_count +=1;
 		if (loaded_count==load_nb){
@@ -333,6 +339,14 @@ map.on('load', function() {
 			map.setPaintProperty('grid_layer','fill-opacity', parseFloat(jQuery('#opacity').val())) 
 			map.setPaintProperty('radar_layer','circle-color',getFillColor(color))
 		})
+
+		jQuery('#zoom-level').on('change', function() {
+			zoomMap = [0,1,1,2,3,4,5,6].map(x=>Math.max(x-parseInt(jQuery('#zoom-level').val()),0));
+			
+		})
+
+		
+
 
 		jQuery('#radar').on('change', function() {
 			if (jQuery('#radar').prop("checked")){
@@ -507,7 +521,7 @@ map.on('load', function() {
 
 
 const quiver_resize_factor = 20;
-let zoomMap = [4,2,2,3,4,5,6,7];
+let zoomMap = [0,1,1,2,3,4,5,6];
 
 const sliderchange = function(){
 	if (date[s.value]>0){
@@ -526,9 +540,7 @@ const sliderchange = function(){
 			var rt = new Array(grid_geojson.features.length).fill(0);
 		}
 
-		var zoom = map.getZoom();
-		console.log(zoom + zoomMap.map(x => x<zoom))
-		
+		var zoom = map.getZoom();		
 
 		for (var i = 0, len = grid_geojson.features.length; i < len; i++) {
 			const x = (ut[i]==0 | rt[i]) ? 0 : ut[i]/100-30;
@@ -541,13 +553,11 @@ const sliderchange = function(){
 				quiver_geojson.features[i].properties.size = 0
 			}
 
-
 			grid_geojson.features[i].properties.value = rt[i] ? 0 : dt[i]/100;
 			grid_geojson.features[i].properties.angle = quiver_geojson.features[i].properties.angle;
 			grid_geojson.features[i].properties.speed = quiver_geojson.features[i].properties.size*quiver_resize_factor;
 		}
-		map.getSource('grid_source').setData(grid_geojson);
-		map.getSource('quiver_source').setData(quiver_geojson);
+		
 
 		radar_geojson.features = radar_geojson.features.map( r => {
 			const x = r.properties.u[date[s.value]]==0 ? 0 : r.properties.u[date[s.value]]/100-30;
@@ -558,12 +568,14 @@ const sliderchange = function(){
 			r.properties.value = r.properties.dens[date[s.value]]/100
 			return r
 		});
-		map.getSource('radar_source').setData(radar_geojson);
-
 		gauge.refresh(dt.reduce( (a,i) => {return a+i})/100*500/1000000); // 500 convert bird/km^2 -> bird, 1000000 to Millions
 		jQuery('#tt-nb-div').removeClass('day').addClass('night')
 		jQuery('#tt-sun').removeClass('fa-sun').addClass('fa-moon')
 		jQuery('#gauge > svg > text:nth-child(5) > tspan').removeClass('day').addClass('night')
+
+		map.getSource('grid_source').setData(grid_geojson);
+		map.getSource('quiver_source').setData(quiver_geojson);
+		map.getSource('radar_source').setData(radar_geojson);
 	} else if (skip) {
 		i=0
 		while (date[parseFloat(s.value)+i] == 0){

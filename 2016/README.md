@@ -1,5 +1,5 @@
 # BMM-web
-This repository store the code and dataset for building the website [bmm.raphaelnussbaumer.com](https://bmm.raphaelnussbaumer.com/) used to visualize the result of the interpolation of migrant bird density measured by a weather radar network [BMM](https://rafnuss-postdoc.github.io/BMM/).
+This repository store the code and dataset for building the website [bmm.raphaelnussbaumer.com](http://bmm.raphaelnussbaumer.com/) used to visualize the result of the interpolation of migrant bird density measured by a weather radar network [BMM](https://rafnuss-postdoc.github.io/BMM/).
 
 ## Demo
 

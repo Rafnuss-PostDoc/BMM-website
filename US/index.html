@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <title>Bird Migration Model US</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-    <link href="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css" rel="stylesheet">
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js"></script>
     <style>
         body {
             margin: 0;
@@ -61,7 +61,8 @@
         <button id="playpause">|| / ></button>
         <button id="next">&#62;</button>
         <br>
-        <input id="slider-time" type="range" min="0" max="366" value="0" step="1" list="steplist-time" style="width: 70%;">
+        <input id="slider-time" type="range" min="0" max="366" value="0" step="1" list="steplist-time"
+            style="width: 70%;">
         <datalist id="steplist-time">
             <option>1</option>
             <option>32</option>
@@ -82,13 +83,13 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoicmFmbnVzcyIsImEiOiIzMVE1dnc0In0.3FNMKIlQ_afYktqki-6m0g';
 
         var url = new URL(window.location.href);
-        var c = url.searchParams.get("y") ? url.searchParams.get("y") : "2010";
+        var c = url.searchParams.get("y") ? url.searchParams.get("y") : "2017";
 
         const map = new mapboxgl.Map({
             container: 'map',
             minZoom: 2,
             zoom: 3,
-            center: [-105.5411291, 38.9607531, ],
+            center: [-105.5411291, 38.9607531,],
         });
 
         map.addSource('satellite', {
@@ -99,7 +100,7 @@
         map.addSource('video-estimation', {
             'type': 'video',
             'urls': [
-                'https://rafnuss-postdoc.github.io/BMM-US/assets/'+c+'.webm'
+                'https://birdmigrationmap.vogelwarte.ch/US/assets/' + c + '.webm'
             ],
             'coordinates': [
                 [-125, 50],
@@ -175,25 +176,25 @@
         });
 
         document.getElementById('slider-speed').addEventListener('input', (e) => {
-            let speed = Math.pow(2,e.target.value);
+            let speed = Math.pow(2, e.target.value);
             videoEstHTML.playbackRate = speed
             //videoSimHTML.playbackRate = speed;
-            document.getElementById('speed-label').innerText = 'x'+speed
+            document.getElementById('speed-label').innerText = 'x' + speed
         });
 
         document.getElementById('slider-time').addEventListener('input', (e) => {
-            videoEstHTML.currentTime = e.target.value*videoEstHTML.duration/366
+            videoEstHTML.currentTime = e.target.value * videoEstHTML.duration / 366
             //videoSimHTML.currentTime = e.target.value*videoSimHTML.duration/365
         });
 
         //var videoSimHTML=[]
-        var videoEstHTML=[]
+        var videoEstHTML = []
 
         function myVideoUpdate(e) {
-            let r = videoEstHTML.currentTime/videoEstHTML.duration
-            document.getElementById('slider-time').value = r*366
+            let r = videoEstHTML.currentTime / videoEstHTML.duration
+            document.getElementById('slider-time').value = r * 366
             var date = new Date(c, 0);
-            new Date(date.setDate(r*366+2));
+            new Date(date.setDate(r * 366 + 2));
             document.getElementById("time-label").innerHTML = date.toLocaleDateString("en-US", { weekday: undefined, year: 'numeric', month: 'long', day: 'numeric' });
         }
 

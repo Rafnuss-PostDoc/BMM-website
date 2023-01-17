@@ -84,7 +84,8 @@ jQuery(document).ready(function () {
 	var figure = L.control({ position: 'bottomleft' });
 	figure.onAdd = function (map) {
 		var div = L.DomUtil.create('div', 'timeseries-div');
-		div.innerHTML = '<ul class="nav nav-tabs" id="myTab" role="tablist"><li class="nav-item">' +
+		div.innerHTML = '';
+		/*div.innerHTML += '<ul class="nav nav-tabs" id="myTab" role="tablist"><li class="nav-item">' +
 			'<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><i class="fa fa-chevron-down"></i></a>' +
 			'</li><li class="nav-item"  data-toggle="tooltip" title="Time series of bird density">' +
 			'<a class="nav-link" id="density-tab" data-toggle="tab" href="#tab_density" role="tab" aria-controls="tab_density" aria-selected="false">Density Profile [bird/km<sup>2</sup>]</a>' +
@@ -92,8 +93,8 @@ jQuery(document).ready(function () {
 			'<a class="nav-link" id="sum-tab" data-toggle="tab" href="#tab_sum" role="tab" aria-controls="tab_sum" aria-selected="false" >Sum Profile [bird]</a>' +
 			'</li><li class="nav-item" data-toggle="tooltip" title="Time series of the Mean Traffic Rate (flux of bird perpendicular to a transect)">' +
 			'<a class="nav-link" id="mtr-tab" data-toggle="tab" href="#tab_mtr" role="tab" aria-controls="tab_mtr" aria-selected="false" >MTR Profile [bird/km/hr]</a>' +
-			'</li></ul>' +
-			'<div class="tab-content" id="myTabContent">' +
+			'</li></ul>';*/
+		div.innerHTML += '<div class="tab-content" id="myTabContent">' +
 			'<div class="tab-pane show active" id="home" role="tabpanel" aria-labelledby="home-tab"></div>' +
 			'<div class="tab-pane" id="tab_density" role="tabpanel" aria-labelledby="density-tab">' +
 			'<div id="plot_density"></div>' +
@@ -114,7 +115,6 @@ jQuery(document).ready(function () {
 		return div;
 	};
 	figure.addTo(map);
-
 
 	figure.getContainer().addEventListener('mouseover', function () {
 		map.dragging.disable();
@@ -156,9 +156,9 @@ jQuery(document).ready(function () {
 			'<label class="checkbox-inline"><input type="checkbox" checked id="checkbox1"> Flight vectors</label>' +
 			'</div>';
 
-		div.innerHTML += '<div id="tt-nb-div" class="form-control night">' +
+		/*div.innerHTML += '<div id="tt-nb-div" class="form-control night">' +
 			'<div id="gauge"></div><i id="tt-sun" class="fas fa-2x fa-moon"></i></div>';
-
+*/
 		div.innerHTML += '<div id="learnmore-div" class="form-control">\
 		<a role="button" data-toggle="tooltip" class="btn btn-default" title="Introduction to the interpolation model" href="https://Rafnuss-PostDoc.github.io/BMM/2016" target="_blank"><i class="fas fa-atom"></i></a>\
 		<a role="button" data-toggle="tooltip" class="btn btn-default" title="Paper" href="https://doi.org/10.3390/rs11192233" target="_blank"><i class="ai ai-doi"></i></a>\
@@ -185,7 +185,7 @@ jQuery(document).ready(function () {
 		map.dragging.enable();
 	});
 
-	var gauge = new JustGage({
+	/*var gauge = new JustGage({
 		id: "gauge",
 		value: 24.7,
 		min: 0,
@@ -199,7 +199,7 @@ jQuery(document).ready(function () {
 	jQuery('#gauge > svg > text:nth-child(6)').css('font-size', '14px');
 	jQuery('#gauge > svg > text:nth-child(7)').css('font-size', '12px');
 	jQuery('#gauge > svg > text:nth-child(8)').css('font-size', '12px');
-
+*/
 
 	jQuery('#checkbox1').change(function () {
 		if (jQuery(this).is(":checked")) {
@@ -347,286 +347,289 @@ jQuery(document).ready(function () {
 	});
 
 
-
-	var drawn = new L.FeatureGroup();
-	map.addLayer(drawn);
-
-	var drawControl_density = new L.Control.Draw({
-		edit: {
-			featureGroup: drawn,
-			remove: false,
-			edit: false,
-		},
-		draw: {
-			rectangle: false,
-			polyline: false,
-			circle: false,
-			circlemarker: false,
-			polygon: false,
-			marker: {
-				icon: new L.MakiMarkers.icon({ icon: "circle-stroked", color: '#000000', size: "m" })
-			}
-		},
-	});
-	var drawControl_sum = new L.Control.Draw({
-		edit: {
-			featureGroup: drawn,
-			remove: false,
-			edit: false,
-		},
-		draw: {
-			rectangle: false,
-			polyline: false,
-			circle: false,
-			circlemarker: false,
-			marker: false,
-		},
-	});
-	var drawControl_mtr = new L.Control.Draw({
-		edit: {
-			featureGroup: drawn,
-			remove: false,
-			edit: false,
-		},
-		draw: {
-			rectangle: false,
-			polygon: false,
-			circle: false,
-			circlemarker: false,
-			marker: false,
-		},
-	});
-
-	map.on(L.Draw.Event.CREATED, function (e) {
-
-		e.layer.bindPopup(`
-			<div class="modal-header">
-			<h4 class="modal-title"><i class="fa fa-spinner fa-pulse fa-fw"></i> Loading</h4>
-			</div>
-			<div class="modal-body">
-			Computing the timeserie requested. Please, wait up to a minute.
-			</div>`);
-		//'<a class="btn btn-success" href="'+link+'" target="_blank" download style="color:white;"><i class="fas fa-download"></i> Downolad data </a><br><a class="btn btn-defaul" style="color:black;" href="https://github.com/Rafnuss-PostDoc/BMM-web#how-to-use-the-api" target="_blank"><i class="fas fa-info-circle"></i> More info </a>')
-		drawn.addLayer(e.layer);
-		e.layer.openPopup();
-
-		if (e.layerType === 'marker') {
-			var link = 'https://bmm.raphaelnussbaumer.com/api/marker_density/' + e.layer._latlng.lat + ',' + e.layer._latlng.lng;
-		} else if (e.layerType === 'polygon') {
-			var polyPoints = e.layer.getLatLngs();
-			var pts_string = polyPoints[0].map((e) => e.lat + "," + e.lng).join('/');
-			var link = 'https://bmm.raphaelnussbaumer.com/api/polygon_sum/' + pts_string;
-		} else if (e.layerType === 'polyline') {
-			var polyPoints = e.layer.getLatLngs();
-			var pts_string = polyPoints.map((e) => e.lat + "," + e.lng).join('/');
-			var link = 'https://bmm.raphaelnussbaumer.com/api/polyline_mtr/' + pts_string;
-		}
-
-		jQuery.getJSON(link, function (data) {
-			if (data.length < 1) {
-				alert('No data for this location (Try closer to existing data =)');
-				map.removeLayer(e.layer);
-			} else if (e.layerType === 'marker') {
-				e.layer.setIcon(L.MakiMarkers.icon({ icon: "circle-stroked", color: col[(gd_density.i_group * 3 - 4) % 10], size: "m" }));
-				name = Math.round(e.layer._latlng.lat / 2) * 2 + "°N " + Math.round(e.layer._latlng.lng / 2) * 2 + "°NE";
-				loadNewData(gd_density, [data.density.est, data.density.q10, data.density.q90], est_time, name);
+	/* NOT WORKING SINCE SERVER IS DOWN
+		var drawn = new L.FeatureGroup();
+		map.addLayer(drawn);
+	
+		var drawControl_density = new L.Control.Draw({
+			edit: {
+				featureGroup: drawn,
+				remove: false,
+				edit: false,
+			},
+			draw: {
+				rectangle: false,
+				polyline: false,
+				circle: false,
+				circlemarker: false,
+				polygon: false,
+				marker: {
+					icon: new L.MakiMarkers.icon({ icon: "circle-stroked", color: '#000000', size: "m" })
+				}
+			},
+		});
+		var drawControl_sum = new L.Control.Draw({
+			edit: {
+				featureGroup: drawn,
+				remove: false,
+				edit: false,
+			},
+			draw: {
+				rectangle: false,
+				polyline: false,
+				circle: false,
+				circlemarker: false,
+				marker: false,
+			},
+		});
+		var drawControl_mtr = new L.Control.Draw({
+			edit: {
+				featureGroup: drawn,
+				remove: false,
+				edit: false,
+			},
+			draw: {
+				rectangle: false,
+				polygon: false,
+				circle: false,
+				circlemarker: false,
+				marker: false,
+			},
+		});
+	
+		map.on(L.Draw.Event.CREATED, function (e) {
+	
+			e.layer.bindPopup(`
+				<div class="modal-header">
+				<h4 class="modal-title"><i class="fa fa-spinner fa-pulse fa-fw"></i> Loading</h4>
+				</div>
+				<div class="modal-body">
+				Computing the timeserie requested. Please, wait up to a minute.
+				</div>`);
+			//'<a class="btn btn-success" href="'+link+'" target="_blank" download style="color:white;"><i class="fas fa-download"></i> Downolad data </a><br><a class="btn btn-defaul" style="color:black;" href="https://github.com/Rafnuss-PostDoc/BMM-web#how-to-use-the-api" target="_blank"><i class="fas fa-info-circle"></i> More info </a>')
+			drawn.addLayer(e.layer);
+			e.layer.openPopup();
+	
+			if (e.layerType === 'marker') {
+				var link = 'https://bmm.raphaelnussbaumer.com/api/marker_density/' + e.layer._latlng.lat + ',' + e.layer._latlng.lng;
 			} else if (e.layerType === 'polygon') {
-				e.layer.setStyle({ fillColor: col[(gd_sum.i_group * 3 - 2) % 10], color: col[(gd_sum.i_group * 3 - 2) % 10] });
-				name = "Polygon (" + KMBFormatter(data.area) + ' km<sup>2</sup>)';
-				loadNewData(gd_sum, [data.avg, data.min, data.max], sim_time, name);
+				var polyPoints = e.layer.getLatLngs();
+				var pts_string = polyPoints[0].map((e) => e.lat + "," + e.lng).join('/');
+				var link = 'https://bmm.raphaelnussbaumer.com/api/polygon_sum/' + pts_string;
 			} else if (e.layerType === 'polyline') {
-				e.layer.setStyle({ fillColor: col[(2 + gd_mtr.i_group - 1) % 10], color: col[(gd_mtr.i_group - 1) % 10] });
-				name = "Polyline (" + KMBFormatter(data[1]) + ' km)';
-				loadNewData(gd_mtr, data[0], est_time, name);
+				var polyPoints = e.layer.getLatLngs();
+				var pts_string = polyPoints.map((e) => e.lat + "," + e.lng).join('/');
+				var link = 'https://bmm.raphaelnussbaumer.com/api/polyline_mtr/' + pts_string;
 			}
-
-			e.layer.bindPopup('' +
-				'<div class="modal-header">' +
-				'<h4 class="modal-title"><i class="fas fa-check"></i> Success</h4>' +
-				'</div>' +
-				'<div class="modal-body">' +
-				'Data loaded succesfully. See the time serie in the corresponding panel below.' +
-				'</div>');
-		}).fail(function () {
-			e.layer.bindPopup('' +
-				'<div class="modal-header"' +
-				'<h4 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Error</h4>' +
-				'</div>' +
-				'<div class="modal-body">' +
-				'Error when downloading the data. Please try again. If the error persists, please contact rafnuss@gmail.com. ' +
-				'</div>');
-		});
-	});
-
-	map.on('draw:drawvertex', e => {
-		const layerIds = Object.keys(e.layers._layers);
-		if (layerIds.length > 1) {
-			const secondVertex = e.layers._layers[layerIds[1]]._icon;
-			requestAnimationFrame(() => secondVertex.click());
-		}
-
-	});
-
-	map.addControl(drawControl_density).addControl(drawControl_sum).addControl(drawControl_mtr);
-	L.DomUtil.get('mapbuttons_density_div').appendChild(drawControl_density.getContainer());
-	L.DomUtil.get('mapbuttons_sum_div').appendChild(drawControl_sum.getContainer());
-	L.DomUtil.get('mapbuttons_mtr_div').appendChild(drawControl_mtr.getContainer());
-
-
-
-
-	d3colors = Plotly.d3.scale.category10();
-	col = []
-	for (var i = 0; i < 11; i += 1) {
-		col.push(d3colors(i));
-	}
-
-
-	gd_style = {
-		width: '100%',
-		'margin-left': '0px',
-		height: '290px',
-		'max-height': 'calc( 100vh - 105px )',
-		'margin-top': '0px'
-	};
-
-	gd_density = document.getElementById('plot_density');
-	gd_sum = document.getElementById('plot_sum');
-	gd_mtr = document.getElementById('plot_mtr');
-	Plotly.d3.select(gd_density).style(gd_style).node();
-	Plotly.d3.select(gd_sum).style(gd_style).node();
-	Plotly.d3.select(gd_mtr).style(gd_style).node();
-	gd_density.i_group = 1;
-	gd_sum.i_group = 1;
-	gd_mtr.i_group = 1;
-
-	jQuery.getJSON("./data/API/exportEst_time.json", function (data) {
-		est_time = data[0];
-
-		jQuery.getJSON("./data/API/exportSim_time.json", function (data) {
-
-			sim_time = data[0];
-			sim_time_d = sim_time.map(x => new Date(x));
-
-			var layout = {
-				autosize: true,
-				margin: {
-					l: 35,
-					r: 35,
-					b: 15,
-					t: 0,
-				},
-				//title:"Density [bird/km<sup>2</sup>]",
-				showlegend: true,
-				legend: { "orientation": "h", x: 0, y: 1 },
-				xaxis: {
-					//autorange: true,
-					range: [est_time[0], est_time[est_time.length - 1]],
-					rangeselector: {
-						buttons: [
-							{
-								count: 1,
-								label: '1d',
-								step: 'day',
-								stepmode: 'backward'
-							},
-							{
-								count: 7,
-								label: '1w',
-								step: 'day',
-								stepmode: 'backward'
-							},
-							{ step: 'all' }
-						]
-					},
-					//rangeslider: {range: [d_date[0], d_date[d_date.length - 1]]},
-					type: 'date'
-				},
-				yaxis: {
-					autorange: true,
-					//range: [Math.min(...DG_all.est), Math.max(...DG_all.est)],
-					type: 'linear',
-				},
-				shapes: [{
-					type: "line",
-					x0: est_time[0],
-					x1: est_time[0],
-					y0: 0,
-					y1: 1,
-					yref: "paper",
-					line: {
-						color: '#7F7F7F',
-						width: 2,
-						dash: 'dot'
-					},
-				}]
-			};
-
-			Plotly.newPlot(gd_density, [], layout, { modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'hoverCompareCartesian', 'hoverClosestCartesian', 'hoverCompareCartesian', 'resetScale2d', 'zoomIn2d', 'zoomOut2d'] });
-			Plotly.newPlot(gd_sum, [], layout, { modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'hoverCompareCartesian', 'hoverClosestCartesian', 'hoverCompareCartesian', 'resetScale2d', 'zoomIn2d', 'zoomOut2d'] });
-			Plotly.newPlot(gd_mtr, [], layout, { modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'hoverCompareCartesian', 'hoverClosestCartesian', 'hoverCompareCartesian', 'resetScale2d', 'zoomIn2d', 'zoomOut2d'] });
-
-			// Update figure with time
-			map.timeDimension.on('timeload', function (data) {
-				var date = new Date(map.timeDimension.getCurrentTime());
-				date_str = date.toISOString().replace('T', ' ').slice(0, 16);
-				Plotly.relayout(gd_density, { 'shapes[0].x0': date_str, 'shapes[0].x1': date_str })
-				Plotly.relayout(gd_sum, { 'shapes[0].x0': date_str, 'shapes[0].x1': date_str })
-				Plotly.relayout(gd_mtr, { 'shapes[0].x0': date_str, 'shapes[0].x1': date_str })
-				i = 0;
-				while (sim_time_d[i] < date) {
-					i = i + 1;
+	
+			jQuery.getJSON(link, function (data) {
+				if (data.length < 1) {
+					alert('No data for this location (Try closer to existing data =)');
+					map.removeLayer(e.layer);
+				} else if (e.layerType === 'marker') {
+					e.layer.setIcon(L.MakiMarkers.icon({ icon: "circle-stroked", color: col[(gd_density.i_group * 3 - 4) % 10], size: "m" }));
+					name = Math.round(e.layer._latlng.lat / 2) * 2 + "°N " + Math.round(e.layer._latlng.lng / 2) * 2 + "°NE";
+					loadNewData(gd_density, [data.density.est, data.density.q10, data.density.q90], est_time, name);
+				} else if (e.layerType === 'polygon') {
+					e.layer.setStyle({ fillColor: col[(gd_sum.i_group * 3 - 2) % 10], color: col[(gd_sum.i_group * 3 - 2) % 10] });
+					name = "Polygon (" + KMBFormatter(data.area) + ' km<sup>2</sup>)';
+					loadNewData(gd_sum, [data.avg, data.min, data.max], sim_time, name);
+				} else if (e.layerType === 'polyline') {
+					e.layer.setStyle({ fillColor: col[(2 + gd_mtr.i_group - 1) % 10], color: col[(gd_mtr.i_group - 1) % 10] });
+					name = "Polyline (" + KMBFormatter(data[1]) + ' km)';
+					loadNewData(gd_mtr, data[0], est_time, name);
 				}
-
-				gauge.refresh(gd_sum.data[1].y[i] / 1000000);
-				if (gd_sum.data[1].y[i] == 0) {
-					//jQuery('#tt-nb').html('0')
-					jQuery('#tt-nb-div').removeClass('night').addClass('day')
-					jQuery('#tt-sun').removeClass('fa-moon').addClass('fa-sun')
-					jQuery('#gauge > svg > text:nth-child(5) > tspan').removeClass('night').addClass('day')
-				} else {
-					// jQuery('#tt-nb').html(KMBFormatter(parseFloat(gd_sum.data[1].y[id])))
-					jQuery('#tt-nb-div').removeClass('day').addClass('night')
-					jQuery('#tt-sun').removeClass('fa-sun').addClass('fa-moon')
-					jQuery('#gauge > svg > text:nth-child(5) > tspan').removeClass('day').addClass('night')
-				}
-
+	
+				e.layer.bindPopup('' +
+					'<div class="modal-header">' +
+					'<h4 class="modal-title"><i class="fas fa-check"></i> Success</h4>' +
+					'</div>' +
+					'<div class="modal-body">' +
+					'Data loaded succesfully. See the time serie in the corresponding panel below.' +
+					'</div>');
+			}).fail(function () {
+				e.layer.bindPopup('' +
+					'<div class="modal-header"' +
+					'<h4 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Error</h4>' +
+					'</div>' +
+					'<div class="modal-body">' +
+					'Error when downloading the data. Please try again. If the error persists, please contact rafnuss@gmail.com. ' +
+					'</div>');
 			});
-
-			setTimeout(function () {
-				Plotly.Plots.resize(gd_density);
-				Plotly.Plots.resize(gd_mtr);
-				jQuery('[data-title="Toggle Spike Lines"]').remove();
-				jQuery('[data-title="Produced with Plotly"]').remove()
-				jQuery('[data-title="Lasso Select"]').remove()
-				jQuery('[data-title="Box Select"]').remove()
-			}, 2000);
-
-
-			jQuery.getJSON('./data/API/global.json', function (data) {
-				var name = "Total Sum (" + KMBFormatter(data.area) + ' km<sup>2</sup>)';
-				loadNewData(gd_sum, [data.avg, data.min, data.max], sim_time, name)
-
-				var name = "Total Average (" + KMBFormatter(data.area) + ' km<sup>2</sup>)';
-				var d = data.avg.map((e) => e / data.area, sim_time);
-				loadNewData(gd_density, d, sim_time, name)
-			})
 		});
-	});
-
-
-	window.onresize = function () {
-		Plotly.Plots.resize(gd_density);
-		Plotly.Plots.resize(gd_sum);
-		Plotly.Plots.resize(gd_mtr);
-	};
-
-	jQuery('.nav-item a').on('shown.bs.tab', function (event) {
-		Plotly.Plots.resize(gd_density);
-		Plotly.Plots.resize(gd_sum);
-		Plotly.Plots.resize(gd_mtr);
-	});
-
+	
+		map.on('draw:drawvertex', e => {
+			const layerIds = Object.keys(e.layers._layers);
+			if (layerIds.length > 1) {
+				const secondVertex = e.layers._layers[layerIds[1]]._icon;
+				requestAnimationFrame(() => secondVertex.click());
+			}
+	
+		});
+	
+		map.addControl(drawControl_density).addControl(drawControl_sum).addControl(drawControl_mtr);
+		L.DomUtil.get('mapbuttons_density_div').appendChild(drawControl_density.getContainer());
+		L.DomUtil.get('mapbuttons_sum_div').appendChild(drawControl_sum.getContainer());
+		L.DomUtil.get('mapbuttons_mtr_div').appendChild(drawControl_mtr.getContainer());
+	
+	
+	
+	
+		d3colors = Plotly.d3.scale.category10();
+		col = []
+		for (var i = 0; i < 11; i += 1) {
+			col.push(d3colors(i));
+		}
+	
+	
+		
+		gd_style = {
+			width: '100%',
+			'margin-left': '0px',
+			height: '290px',
+			'max-height': 'calc( 100vh - 105px )',
+			'margin-top': '0px'
+		};
+	
+		gd_density = document.getElementById('plot_density');
+		gd_sum = document.getElementById('plot_sum');
+		gd_mtr = document.getElementById('plot_mtr');
+		Plotly.d3.select(gd_density).style(gd_style).node();
+		Plotly.d3.select(gd_sum).style(gd_style).node();
+		Plotly.d3.select(gd_mtr).style(gd_style).node();
+		gd_density.i_group = 1;
+		gd_sum.i_group = 1;
+		gd_mtr.i_group = 1;
+	
+		
+		jQuery.getJSON("/data/API/exportEst_time.json", function (data) {
+			est_time = data[0];
+	
+			jQuery.getJSON("/data/API/exportSim_time.json", function (data) {
+	
+				sim_time = data[0];
+				sim_time_d = sim_time.map(x => new Date(x));
+	
+				var layout = {
+					autosize: true,
+					margin: {
+						l: 35,
+						r: 35,
+						b: 15,
+						t: 0,
+					},
+					//title:"Density [bird/km<sup>2</sup>]",
+					showlegend: true,
+					legend: { "orientation": "h", x: 0, y: 1 },
+					xaxis: {
+						//autorange: true,
+						range: [est_time[0], est_time[est_time.length - 1]],
+						rangeselector: {
+							buttons: [
+								{
+									count: 1,
+									label: '1d',
+									step: 'day',
+									stepmode: 'backward'
+								},
+								{
+									count: 7,
+									label: '1w',
+									step: 'day',
+									stepmode: 'backward'
+								},
+								{ step: 'all' }
+							]
+						},
+						//rangeslider: {range: [d_date[0], d_date[d_date.length - 1]]},
+						type: 'date'
+					},
+					yaxis: {
+						autorange: true,
+						//range: [Math.min(...DG_all.est), Math.max(...DG_all.est)],
+						type: 'linear',
+					},
+					shapes: [{
+						type: "line",
+						x0: est_time[0],
+						x1: est_time[0],
+						y0: 0,
+						y1: 1,
+						yref: "paper",
+						line: {
+							color: '#7F7F7F',
+							width: 2,
+							dash: 'dot'
+						},
+					}]
+				};
+	
+				Plotly.newPlot(gd_density, [], layout, { modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'hoverCompareCartesian', 'hoverClosestCartesian', 'hoverCompareCartesian', 'resetScale2d', 'zoomIn2d', 'zoomOut2d'] });
+				Plotly.newPlot(gd_sum, [], layout, { modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'hoverCompareCartesian', 'hoverClosestCartesian', 'hoverCompareCartesian', 'resetScale2d', 'zoomIn2d', 'zoomOut2d'] });
+				Plotly.newPlot(gd_mtr, [], layout, { modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'hoverCompareCartesian', 'hoverClosestCartesian', 'hoverCompareCartesian', 'resetScale2d', 'zoomIn2d', 'zoomOut2d'] });
+	
+				// Update figure with time
+				map.timeDimension.on('timeload', function (data) {
+					var date = new Date(map.timeDimension.getCurrentTime());
+					date_str = date.toISOString().replace('T', ' ').slice(0, 16);
+					Plotly.relayout(gd_density, { 'shapes[0].x0': date_str, 'shapes[0].x1': date_str })
+					Plotly.relayout(gd_sum, { 'shapes[0].x0': date_str, 'shapes[0].x1': date_str })
+					Plotly.relayout(gd_mtr, { 'shapes[0].x0': date_str, 'shapes[0].x1': date_str })
+					i = 0;
+					while (sim_time_d[i] < date) {
+						i = i + 1;
+					}
+	
+					gauge.refresh(gd_sum.data[1].y[i] / 1000000);
+					if (gd_sum.data[1].y[i] == 0) {
+						//jQuery('#tt-nb').html('0')
+						jQuery('#tt-nb-div').removeClass('night').addClass('day')
+						jQuery('#tt-sun').removeClass('fa-moon').addClass('fa-sun')
+						jQuery('#gauge > svg > text:nth-child(5) > tspan').removeClass('night').addClass('day')
+					} else {
+						// jQuery('#tt-nb').html(KMBFormatter(parseFloat(gd_sum.data[1].y[id])))
+						jQuery('#tt-nb-div').removeClass('day').addClass('night')
+						jQuery('#tt-sun').removeClass('fa-sun').addClass('fa-moon')
+						jQuery('#gauge > svg > text:nth-child(5) > tspan').removeClass('day').addClass('night')
+					}
+	
+				});
+	
+				setTimeout(function () {
+					Plotly.Plots.resize(gd_density);
+					Plotly.Plots.resize(gd_mtr);
+					jQuery('[data-title="Toggle Spike Lines"]').remove();
+					jQuery('[data-title="Produced with Plotly"]').remove()
+					jQuery('[data-title="Lasso Select"]').remove()
+					jQuery('[data-title="Box Select"]').remove()
+				}, 2000);
+	
+	
+				jQuery.getJSON('./data/API/global.json', function (data) {
+					var name = "Total Sum (" + KMBFormatter(data.area) + ' km<sup>2</sup>)';
+					loadNewData(gd_sum, [data.avg, data.min, data.max], sim_time, name)
+	
+					var name = "Total Average (" + KMBFormatter(data.area) + ' km<sup>2</sup>)';
+					var d = data.avg.map((e) => e / data.area, sim_time);
+					loadNewData(gd_density, d, sim_time, name)
+				})
+			});
+		});
+		
+	
+	
+		window.onresize = function () {
+			Plotly.Plots.resize(gd_density);
+			Plotly.Plots.resize(gd_sum);
+			Plotly.Plots.resize(gd_mtr);
+		};
+	
+		jQuery('.nav-item a').on('shown.bs.tab', function (event) {
+			Plotly.Plots.resize(gd_density);
+			Plotly.Plots.resize(gd_sum);
+			Plotly.Plots.resize(gd_mtr);
+		});
+	*/
 	$(function () {
 		$('[data-toggle="tooltip"]').tooltip()
 	})
@@ -658,7 +661,7 @@ function KMBFormatter(num) {
 	return num
 }
 
-
+/*
 function loadNewData(gd, data, time, name) {
 	if (data.length == 3) {
 		Plotly.addTraces(gd, {
@@ -712,10 +715,10 @@ function loadNewData(gd, data, time, name) {
 	}
 	gd.i_group += 1;
 }
+*/
 
 
-
-L.MakiMarkers.accessToken = "pk.eyJ1IjoicmFmbnVzcyIsImEiOiIzMVE1dnc0In0.3FNMKIlQ_afYktqki-6m0g";
+//L.MakiMarkers.accessToken = "pk.eyJ1IjoicmFmbnVzcyIsImEiOiIzMVE1dnc0In0.3FNMKIlQ_afYktqki-6m0g";
 
 
 
